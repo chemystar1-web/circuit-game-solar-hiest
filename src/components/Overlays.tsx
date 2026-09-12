@@ -24,7 +24,7 @@ export function SuccessOverlay({
 
   return (
     // No onClick on backdrop — prevents ghost-click from tile placement immediately closing it
-    <div className="overlay">
+    <div className="overlay success-overlay">
       <div className="success-panel">
         {/* Icon */}
         <div className="success-icon">⚡</div>
@@ -62,11 +62,23 @@ export function SuccessOverlay({
 
         {/* Buttons — same layout for all levels; last level just has no NEXT LEVEL */}
         <div className="success-buttons">
-          <button className="success-btn secondary" onClick={onReplay}>
+          <button
+            className="success-btn secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onReplay();
+            }}
+          >
             REPLAY
           </button>
           {!isLastLevel && (
-            <button className="success-btn primary" onClick={onNextLevel}>
+            <button
+              className="success-btn primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNextLevel();
+              }}
+            >
               NEXT LEVEL →
             </button>
           )}
@@ -86,10 +98,15 @@ interface HelpOverlayProps {
 
 export function HelpOverlay({ onClose }: HelpOverlayProps) {
   return (
-    // Use onMouseDown instead of onClick so the H-key keydown that opens the overlay
-    // cannot ghost-trigger a close event on the same interaction.
-    <div className="overlay" onMouseDown={onClose}>
-      <div className="help-panel" onMouseDown={e => e.stopPropagation()}>
+    <div
+      className="overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="help-panel">
         <div className="help-title">HOW TO PLAY</div>
 
         <div className="help-section">
