@@ -110,8 +110,7 @@ export function CircuitBoard({
     ? { x: leadPos.col * cellSize + cellSize / 2, y: leadPos.row * cellSize + cellSize / 2 }
     : null;
 
-  const isTargetReached =
-    leadPos && grid[leadPos.row] && grid[leadPos.row][leadPos.col]?.type === 'target';
+  
 
   return (
     <div
