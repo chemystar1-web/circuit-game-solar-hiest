@@ -470,6 +470,9 @@ body {
 .side-panel {
   width: 220px;
   min-width: 220px;
+  max-width: 220px;
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, rgba(10, 25, 40, 0.95) 0%, rgba(8, 18, 30, 0.98) 100%);
@@ -482,6 +485,100 @@ body {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-secondary);
   position: relative;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   TIMER WIDGET
+   ============================================================ */
+
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.timer-section {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 10px 16px 12px;
+  border-bottom: 1px solid var(--border-secondary);
+  background: rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Accent line on the left */
+.timer-section::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  opacity: 0.7;
+}
+
+.timer-section.timer-stopped::before {
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green);
+  opacity: 1;
+}
+
+.timer-label {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+/* Pulsing dot when running */
+.timer-section:not(.timer-stopped) .timer-label {
+  color: var(--neon-cyan);
+  animation: timerPulse 1.5s ease-in-out infinite;
+}
+
+/* Solid green when stopped */
+.timer-section.timer-stopped .timer-label {
+  color: var(--neon-green);
+  animation: none;
+}
+
+.timer-display {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  line-height: 1;
+  text-shadow:
+    0 0 10px rgba(0, 212, 255, 0.4),
+    0 0 20px rgba(0, 212, 255, 0.15);
+}
+
+.timer-section.timer-stopped .timer-display {
+  color: var(--neon-green);
+  text-shadow:
+    0 0 10px rgba(0, 255, 136, 0.5),
+    0 0 24px rgba(0, 255, 136, 0.2);
+}
+
+.timer-subtext {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.timer-section.timer-stopped .timer-subtext {
+  color: var(--neon-green);
+  opacity: 0.8;
 }
 
 .panel-title {
@@ -558,23 +655,12 @@ body {
 /* Inventory */
 .inventory-section {
   flex: 1;
-  overflow-y: auto;
-  /* already scrollable */
+  min-height: 0;
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.inventory-section::-webkit-scrollbar {
-  width: 4px;
-}
-.inventory-section::-webkit-scrollbar-track {
-  background: transparent;
-}
-.inventory-section::-webkit-scrollbar-thumb {
-  background: var(--border-secondary);
-  border-radius: 2px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .inventory-title {
@@ -585,7 +671,52 @@ body {
   text-transform: uppercase;
   padding: 4px 0 8px;
   border-bottom: 1px solid var(--border-secondary);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventory-count {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--neon-cyan);
+  opacity: 0.85;
+}
+
+.inventory-items-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-active) rgba(0, 0, 0, 0.25);
+}
+
+.inventory-items-list::-webkit-scrollbar,
+.inventory-section::-webkit-scrollbar {
+  width: 5px;
+}
+.inventory-items-list::-webkit-scrollbar-track,
+.inventory-section::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+}
+.inventory-items-list::-webkit-scrollbar-thumb,
+.inventory-section::-webkit-scrollbar-thumb {
+  background: var(--border-active);
+  border-radius: 3px;
+  box-shadow: 0 0 4px var(--neon-cyan-glow);
+}
+.inventory-items-list::-webkit-scrollbar-thumb:hover,
+.inventory-section::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
 }
 
 .inventory-item {
@@ -600,6 +731,9 @@ body {
   transition: all 0.2s;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .inventory-item::before {
@@ -709,6 +843,7 @@ body {
 .controls-section {
   padding: 12px;
   border-top: 1px solid var(--border-secondary);
+  flex-shrink: 0;
 }
 
 .controls-title {
@@ -763,6 +898,22 @@ body {
   padding: 20px;
   overflow: hidden;
   position: relative;
+}
+
+/* ============================================================
+   RIGHT PANEL (Timer + Controls)
+   ============================================================ */
+
+.right-panel {
+  width: 190px;
+  min-width: 190px;
+  max-width: 190px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(10, 25, 40, 0.95) 0%, rgba(8, 18, 30, 0.98) 100%);
+  border-left: 1px solid var(--border-primary);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* Scroll wrapper for large grids (7x7+) */
@@ -1085,6 +1236,7 @@ body {
   justify-content: center;
   background: rgba(0, 5, 15, 0.85);
   backdrop-filter: blur(4px);
+  animation: successFlash 0.3s ease-out;
 }
 
 .success-panel {
@@ -1094,6 +1246,7 @@ body {
   border-radius: 6px;
   padding: 40px;
   text-align: center;
+  animation: successScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   box-shadow:
     0 0 40px var(--neon-green-glow),
     0 0 80px rgba(0, 255, 136, 0.1),
@@ -1235,6 +1388,7 @@ body {
   border: 1px solid var(--border-primary);
   border-radius: 6px;
   padding: 32px;
+  animation: successScale 0.3s ease-out forwards;
 }
 
 .help-title {
@@ -1475,12 +1629,14 @@ body {
 
 @media (max-width: 1100px) {
   :root { --cell-size: 68px; }
-  .side-panel { width: 190px; min-width: 190px; }
+  .side-panel { width: 190px; min-width: 190px; max-width: 190px; }
+  .right-panel { width: 170px; min-width: 170px; max-width: 170px; }
 }
 
 @media (max-width: 900px) {
   :root { --cell-size: 58px; }
-  .side-panel { width: 170px; min-width: 170px; }
+  .side-panel { width: 170px; min-width: 170px; max-width: 170px; }
+  .right-panel { width: 150px; min-width: 150px; max-width: 150px; }
   .hud { height: 56px; min-height: 56px; }
 }
 
@@ -1490,6 +1646,7 @@ body {
   .side-panel {
     width: 100%;
     min-width: unset;
+    max-width: unset;
     height: 120px;
     min-height: 120px;
     border-right: none;
@@ -1498,11 +1655,24 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
   }
+  .right-panel {
+    display: none;
+  }
   .inventory-section {
+    height: auto;
+    min-height: unset;
+    max-height: unset;
+    flex: 1;
     flex-direction: row;
     padding: 8px;
     overflow-y: hidden;
     overflow-x: auto;
+  }
+  .inventory-items-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-right: 0;
   }
   .inventory-item {
     flex-direction: column;
