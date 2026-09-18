@@ -3,12 +3,14 @@
 // ============================================================
 
 import { useEffect, useCallback, useState, useRef } from 'react';
+import { useGameTimer, formatTime } from './hooks/useGameTimer';
 import { useGameState } from './hooks/useGameState';
 import { CircuitBoard } from './components/CircuitBoard';
 import { InventoryPanel } from './components/Inventory';
 import { HUD } from './components/HUD';
 import { StatusBar } from './components/StatusBar';
 import { SuccessOverlay, HelpOverlay } from './components/Overlays';
+import { RightPanel } from './components/RightPanel';
 import { validatePuzzle } from './game/circuitTraversal';
 import { LEVELS } from './data/levels';
 import type { Position, InventoryItem } from './types/game';
@@ -19,6 +21,9 @@ function App() {
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
   const checkTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Global run timer ───────────────────────────────────────
+  const { elapsed, stopped: timerStopped } = useGameTimer(completedLevels);
 
   // ── Animation ID: incremented each time a new animation starts.
   // Each animStep closure captures its own ID and exits early if a newer
@@ -341,6 +346,14 @@ function App() {
             )}
           </div>
         </div>
+
+        {/* Right: Timer + Controls */}
+        <RightPanel
+          elapsed={elapsed}
+          timerStopped={timerStopped}
+          currentLevel={state.currentLevel}
+          formatTime={formatTime}
+        />
       </div>
 
       {/* Bottom Status Bar */}
