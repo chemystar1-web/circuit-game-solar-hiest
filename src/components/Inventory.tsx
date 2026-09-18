@@ -71,87 +71,63 @@ export function InventoryPanel({
 
       {/* Inventory */}
       <div className="inventory-section">
-        <div className="inventory-title">INVENTORY</div>
+        <div className="inventory-title">
+          <span>INVENTORY</span>
+          <span className="inventory-count">{inventory.length} TYPES</span>
+        </div>
 
-        {inventory.length === 0 && (
-          <div style={{ color: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)', padding: '8px 0' }}>
-            NO COMPONENTS AVAILABLE
-          </div>
-        )}
-
-        {inventory.map((item, idx) => {
-          const isSelected =
-            selectedItem?.type === item.type &&
-            selectedItem?.voltageModifier === item.voltageModifier;
-          const isDepleted = item.quantity <= 0;
-
-          return (
-            <div
-              key={idx}
-              className={`inventory-item ${isSelected ? 'selected' : ''} ${isDepleted ? 'depleted' : ''}`}
-              onClick={() => !isDepleted && onSelectItem(item)}
-              title={isDepleted ? 'DEPLETED' : `Select ${TILE_LABELS[item.type] || item.type}`}
-            >
-              <div className="inventory-tile-preview">
-                <TilePreviewSVG
-                  type={item.type}
-                  voltageModifier={item.voltageModifier}
-                />
-              </div>
-
-              <div className="inventory-item-info">
-                <div className="inventory-item-name" style={{ fontSize: 11 }}>
-                  {TILE_LABELS[item.type] || item.type}
-                </div>
-                <div className="inventory-item-detail" style={{ fontSize: 10 }}>
-                  {item.type === 'voltage' && item.voltageModifier !== undefined
-                    ? `${item.voltageModifier > 0 ? '+' : ''}${item.voltageModifier}V modifier`
-                    : item.type === 'cross'
-                    ? '4-way junction'
-                    : item.type === 'tee'
-                    ? '3-way junction'
-                    : item.type === 'straight'
-                    ? '2-way straight'
-                    : item.type === 'corner'
-                    ? '90° turn'
-                    : ''}
-                </div>
-              </div>
-
-              <div className={`inventory-item-qty ${item.quantity === 0 ? 'depleted' : ''}`}>
-                {item.quantity}
-              </div>
+        <div className="inventory-items-list">
+          {inventory.length === 0 && (
+            <div style={{ color: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)', padding: '8px 0' }}>
+              NO COMPONENTS AVAILABLE
             </div>
-          );
-        })}
-      </div>
+          )}
 
-      {/* Controls Reference */}
-      <div className="controls-section">
-        <div className="controls-title" style={{ fontSize: 10 }}>CONTROLS</div>
-        <div className="control-hint">
-          <span className="control-key">R</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Rotate CW</span>
-        </div>
-        <div className="control-hint">
-          <span className="control-key">Q</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Rotate CCW</span>
-        </div>
-        <div className="control-hint">
-          <span className="control-key">⌫</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Remove tile</span>
-        </div>
-        <div className="control-hint">
-          <span className="control-key">Ctrl+Z</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Undo</span>
-        </div>
-        <div className="control-hint">
-          <span className="control-key">ESC</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Deselect</span>
-        </div>
-        <div className="control-hint">
-          <span className="control-key">H</span>
-          <span className="control-desc" style={{ fontSize: 11 }}>Help</span>
+          {inventory.map((item, idx) => {
+            const isSelected =
+              selectedItem?.type === item.type &&
+              selectedItem?.voltageModifier === item.voltageModifier;
+            const isDepleted = item.quantity <= 0;
+
+            return (
+              <div
+                key={idx}
+                className={`inventory-item ${isSelected ? 'selected' : ''} ${isDepleted ? 'depleted' : ''}`}
+                onClick={() => !isDepleted && onSelectItem(item)}
+                title={isDepleted ? 'DEPLETED' : `Select ${TILE_LABELS[item.type] || item.type}`}
+              >
+                <div className="inventory-tile-preview">
+                  <TilePreviewSVG
+                    type={item.type}
+                    voltageModifier={item.voltageModifier}
+                  />
+                </div>
+
+                <div className="inventory-item-info">
+                  <div className="inventory-item-name" style={{ fontSize: 11 }}>
+                    {TILE_LABELS[item.type] || item.type}
+                  </div>
+                  <div className="inventory-item-detail" style={{ fontSize: 10 }}>
+                    {item.type === 'voltage' && item.voltageModifier !== undefined
+                      ? `${item.voltageModifier > 0 ? '+' : ''}${item.voltageModifier}V modifier`
+                      : item.type === 'cross'
+                      ? '4-way junction'
+                      : item.type === 'tee'
+                      ? '3-way junction'
+                      : item.type === 'straight'
+                      ? '2-way straight'
+                      : item.type === 'corner'
+                      ? '90° turn'
+                      : ''}
+                  </div>
+                </div>
+
+                <div className={`inventory-item-qty ${item.quantity === 0 ? 'depleted' : ''}`}>
+                  {item.quantity}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </aside>
